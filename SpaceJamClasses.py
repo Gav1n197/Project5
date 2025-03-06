@@ -8,11 +8,12 @@ from panda3d.core import Loader, NodePath, Vec3
 from CollideObjectBase import InverseSphereCollideObject, CapsuleCollidableObject, SphereCollidableObject # type: ignore
 
 class Player(SphereCollidableObject):
-    def __init__(self, loader: Loader, taskMgr: TaskManager, accept: Callable[[str, Callable], None], modelPath: str, parentNode: NodePath, nodeName: str, x: float, y: float, z: float, scaleVec: float, Hpr: Vec3):
+    def __init__(self, loader: Loader, taskMgr: TaskManager, accept: Callable[[str, Callable], None], modelPath: str, parentNode: NodePath, nodeName: str, x: float, y: float, z: float, scaleVec: float, Hpr: Vec3, render):
         super(Player, self).__init__(loader, modelPath, parentNode, nodeName, x, y, z, 10) ##Uses __init__ function from SphereCollideObject
         self.taskMgr = taskMgr
         self.accept = accept
         self.loader = loader
+        self.render = render
         self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
@@ -32,7 +33,7 @@ class Player(SphereCollidableObject):
 
         self.taskMgr.add(self.checkIntervals, 'checkMissiles', 34)
     
-    def checkIntervals(self, task):
+    def checkIntervals(self, task): #Object Polling in the dictionaries
         for i in Missile.Intervals:
             if not Missile.Intervals[i].isPlaying(): # isPlaying returns true or false to see if the missile has gotten to the end of its path
                 Missile.cNodes[i].detachNode()
@@ -54,10 +55,10 @@ class Player(SphereCollidableObject):
 
     def applyThrust(self, task):
         rate = 5
-        #trajectory = self.render.getRelativeVector(self.modelNode, Vec3.forward())
-        self.modelNode.setY(self.modelNode, 10) #trajectory was not working, so I used setY instead
-        #trajectory.normalize()
-        #self.modelNode.setFluidPos(self.modelNode.getPos() + trajectory * rate)
+        trajectory = self.render.getRelativeVector(self.modelNode, Vec3.forward())
+        trajectory.normalize()
+        self.modelNode.setFluidPos(self.modelNode.getPos() + trajectory * rate)
+        self.printPosHpr()
         return task.cont                                    # Continue moving the players ship when returning
     
     def setKeyBindings(self): ##Movement for the player, review Warmup3
@@ -83,7 +84,6 @@ class Player(SphereCollidableObject):
         self.accept('s-up', self.Down, [0])
 
         self.accept('f', self.fire)
-        #self.accept('f-up', self.)
 
     def leftRoll(self, keyDown):
         if (keyDown):
@@ -101,12 +101,14 @@ class Player(SphereCollidableObject):
     def applyLeftRoll(self, task):
         rate = 1
         #print('leftroll')
+        self.printPosHpr()
         self.modelNode.setR(self.modelNode.getR() - rate)
         return task.cont
         
     def applyRightRoll(self, task):
         rate = 1
         #print('rightroll')
+        self.printPosHpr()
         self.modelNode.setR(self.modelNode.getR() + rate)
         return task.cont
     
@@ -128,18 +130,21 @@ class Player(SphereCollidableObject):
     def applyLeftTurn(self, task):
         rate = 1
         #print('leftturn')
+        self.printPosHpr()
         self.modelNode.setH(self.modelNode.getH() + rate)
         return task.cont
 
     def applyRightTurn(self, task):
         rate = 1
         #print('rightturn')
+        self.printPosHpr()
         self.modelNode.setH(self.modelNode.getH() - rate)
         return task.cont
     
 #------------------------------------------------------------------------------------
 
     def Up(self, keyDown):
+        
         if (keyDown):
             self.taskMgr.add(self.applyUp, 'up')
         else:
@@ -155,26 +160,34 @@ class Player(SphereCollidableObject):
     def applyUp(self, task):
         rate = 1
         #print('applyUp')
+        self.printPosHpr()
         self.modelNode.setP(self.modelNode.getP() + rate)
         return task.cont
 
     def applyDown(self, task):
         rate = 1
         #print('applyDown')
+        self.printPosHpr()
         self.modelNode.setP(self.modelNode.getP() - rate)
         return task.cont
-    
+
+    def printPosHpr(self):
+        print("renderPos: " + str(self.render.getPos()))
+        print("renderHPR: " + str(self.render.getHpr()))
+        print("modelPOS:  " + str(self.modelNode.getPos()))
+        print("modelHPR:  " + str(self.modelNode.getHpr()))
+
     def fire(self):
         if self.missileBay:
             travRate = self.missileDistance
-            aim = self.modelNode.getRelativeVector(self.modelNode, Vec3.forward())     # The dirction the spaceship is facing (changed from self.render)
-            aim.normalize                                                           # Normalizing a vector makes it consistant all the time
+            aim = self.render.getRelativeVector(self.modelNode, Vec3.forward())  # The dirction the spaceship is facing (changed from self.render)
+            aim.normalize()                                                         # Normalizing a vector makes it consistant all the time
             fireSolution = aim * travRate
-            inFront = aim * 150                                                     # Stores where the missile starts its path in comparison to the spaceship
+            #inFront = aim * 15                                                     # Stores where the missile starts its path in comparison to the spaceship
             travVec = fireSolution + self.modelNode.getPos()
             self.missileBay -= 1
-            tag = 'missile' + str(Missile.missileCount)                                # Creates a tag for each missile that details the number of the missile
-            posVec = self.modelNode.getPos() + inFront
+            tag = 'Missile' + str(Missile.missileCount)                                # Creates a tag for each missile that details the number of the missile
+            posVec = self.modelNode.getPos() #+ inFront
 
             #Create our missile
             currentmissile = Missile(self.loader, 'Assets/Phaser/phaser.egg', self.modelNode, tag, posVec, 4.0) #(modelNode changed from self.render)
@@ -198,7 +211,6 @@ class Player(SphereCollidableObject):
         if self.missileBay > 1: # if the missiles ever glitch out
             self.missileBay = 1
             return Task.done
-
 
 
 class Universe(InverseSphereCollideObject):
