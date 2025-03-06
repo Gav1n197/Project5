@@ -5,11 +5,11 @@ from direct.task.Task import TaskManager
 from typing import Callable
 from panda3d.core import Loader, NodePath, Vec3
 
-from CollideObjectBase import InverseSphereCollideObject, CapsuleCollidableObject, SphereCollidableObject # type: ignore
+from CollideObjectBase import InverseSphereCollideObject, CapsuleCollidableObject, SphereCollidableObject, SphereCollidableObjectVec3 # type: ignore
 
-class Player(SphereCollidableObject):
-    def __init__(self, loader: Loader, taskMgr: TaskManager, accept: Callable[[str, Callable], None], modelPath: str, parentNode: NodePath, nodeName: str, x: float, y: float, z: float, scaleVec: float, Hpr: Vec3, render):
-        super(Player, self).__init__(loader, modelPath, parentNode, nodeName, x, y, z, 10) ##Uses __init__ function from SphereCollideObject
+class Player(SphereCollidableObjectVec3):
+    def __init__(self, loader: Loader, taskMgr: TaskManager, accept: Callable[[str, Callable], None], modelPath: str, parentNode: NodePath, nodeName: str, posVec: Vec3, scaleVec: float, Hpr: Vec3, render):
+        super(Player, self).__init__(loader, modelPath, parentNode, nodeName, posVec, 10) ##Uses __init__ function from SphereCollideObject
         self.taskMgr = taskMgr
         self.accept = accept
         self.loader = loader
@@ -17,9 +17,7 @@ class Player(SphereCollidableObject):
         self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
-        self.modelNode.setX(x)
-        self.modelNode.setY(y)
-        self.modelNode.setZ(z)
+        self.modelNode.setPos(posVec)
         self.modelNode.setScale(scaleVec)
 
         self.modelNode.setName(nodeName)
@@ -183,11 +181,11 @@ class Player(SphereCollidableObject):
             aim = self.render.getRelativeVector(self.modelNode, Vec3.forward())  # The dirction the spaceship is facing (changed from self.render)
             aim.normalize()                                                         # Normalizing a vector makes it consistant all the time
             fireSolution = aim * travRate
-            #inFront = aim * 15                                                     # Stores where the missile starts its path in comparison to the spaceship
+            inFront = aim * 150                                                     # Stores where the missile starts its path in comparison to the spaceship
             travVec = fireSolution + self.modelNode.getPos()
             self.missileBay -= 1
             tag = 'Missile' + str(Missile.missileCount)                                # Creates a tag for each missile that details the number of the missile
-            posVec = self.modelNode.getPos() #+ inFront
+            posVec = self.modelNode.getPos() + inFront
 
             #Create our missile
             currentmissile = Missile(self.loader, 'Assets/Phaser/phaser.egg', self.modelNode, tag, posVec, 4.0) #(modelNode changed from self.render)
