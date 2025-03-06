@@ -215,7 +215,7 @@ class Player(SphereCollidableObject):
 
 class Universe(InverseSphereCollideObject):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float):
-        super(Universe, self).__init__(loader, modelPath, parentNode, nodeName, posVec, 9900) ##Uses __init__ function from InverseSphereCollideObject
+        super(Universe, self).__init__(loader, modelPath, parentNode, nodeName, posVec, 9600) ##Uses __init__ function from InverseSphereCollideObject
         self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
@@ -229,7 +229,7 @@ class Universe(InverseSphereCollideObject):
 
 class SpaceStation(CapsuleCollidableObject):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float):
-        super(SpaceStation, self).__init__(loader, modelPath, parentNode, nodeName, 1, -1, 5, 1, -1, -5, 7)     ##Defines ax, ay, az, etc.
+        super(SpaceStation, self).__init__(loader, modelPath, parentNode, nodeName, 1, -1, 5, 1, -1, -5, 7)     ##Defines ax, ay, az, etc. for capsule
         self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
@@ -240,6 +240,7 @@ class SpaceStation(CapsuleCollidableObject):
 
         tex = loader.loadTexture(texPath)
         self.modelNode.setTexture(tex, 1)
+        print("spacestation " + nodeName + " created")
 
 class Planet(SphereCollidableObject):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, x: float, y: float, z: float, scaleVec: float):
