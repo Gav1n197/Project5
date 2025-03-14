@@ -170,9 +170,9 @@ class Player(SphereCollidableObjectVec3):
         return task.cont
 
     def printPosHpr(self):
-        print("renderPos: " + str(self.render.getPos()))
+        #print("renderPos: " + str(self.render.getPos()))
         print("renderHPR: " + str(self.render.getHpr()))
-        print("modelPOS:  " + str(self.modelNode.getPos()))
+        #print("modelPOS:  " + str(self.modelNode.getPos()))
         print("modelHPR:  " + str(self.modelNode.getHpr()))
 
     def fire(self):
@@ -184,11 +184,12 @@ class Player(SphereCollidableObjectVec3):
             inFront = aim * 150                                                     # Stores where the missile starts its path in comparison to the spaceship
             travVec = fireSolution + self.modelNode.getPos()
             self.missileBay -= 1
-            tag = 'Missile' + str(Missile.missileCount)                                # Creates a tag for each missile that details the number of the missile
+            tag = 'Missile' + str(Missile.missileCount)                             # Creates a tag for each missile that details the number of the missile
             posVec = self.modelNode.getPos() + inFront
 
             #Create our missile
-            currentmissile = Missile(self.loader, 'Assets/Phaser/phaser.egg', self.modelNode, tag, posVec, 4.0) #(modelNode changed from self.render)
+            currentmissile = Missile(self.loader, 'Assets/Phaser/phaser.egg', self.render, tag, posVec, 4.0)
+
             Missile.Intervals[tag] = currentmissile.modelNode.posInterval(2.0, travVec, startPos = posVec, fluid = 1)
             Missile.Intervals[tag].start()
             

@@ -1,4 +1,4 @@
-## Project5 3/6/25 3DGameEngineConcepts
+## Project5 3/14/25 3DGameEngineConcepts
 ## Comments on column 89
 ## All file names and folder names are capitalized (Assets/Planets/Textures/WhitePlanet.png)
 
@@ -33,7 +33,7 @@ class MyApp(ShowBase):
             nickName = "Drone" + str(spaceJamClasses.Drone.droneCount)  ##Concantenation of nicknames for each drone made
 
             self.drawCloudDefense(self.planet1, nickName)
-            #self.drawBaseballSeams(self.spaceStation1, nickName, i, fullCycle, 2)
+            self.drawBaseballSeams(self.spaceStation1, nickName, i, fullCycle, 2)
             self.drawCircleX(self.planet3, nickName, i, fullCycle, 225)
             self.drawCircleY(self.planet4, nickName, i, fullCycle, 175)
             self.drawCircleZ(self.planet5, nickName, i, fullCycle, 425)
@@ -49,9 +49,9 @@ class MyApp(ShowBase):
         self.planet5 = spaceJamClasses.Planet(self.loader, "Assets/Planets/protoPlanet.x", self.render, "planet5", "Assets/Planets/Textures/Venus.jpg",          3000, -6000, 230,  350)
         self.planet6 = spaceJamClasses.Planet(self.loader, "Assets/Planets/protoPlanet.x", self.render, "planet6", "Assets/Planets/Textures/GreyPlanet.jpg",    -3000, -6000, 730,  250) 
 
-        self.player = spaceJamClasses.Player(self.loader, self.taskMgr, self.accept, "Assets/Spaceships/Dumbledore/Dumbledore.x", self.render, "player", (0, -90, 0), 1, (0, 0, 0), self.render)
+        self.player = spaceJamClasses.Player(self.loader, self.taskMgr, self.accept, "Assets/Spaceships/Dumbledore/Dumbledore.x", self.render, "player", (0, 0, 0), 1, (0, 0, 0), self.render)
         
-        self.spaceStation1 = spaceJamClasses.SpaceStation(self.loader, "Assets/SpaceStation/SpaceStation1B/spaceStation.x", self.render, "spaceStation1", "Assets/Planets/Textures/Mercury.jpg", (0, 270, 0), 3) 
+        self.spaceStation1 = spaceJamClasses.SpaceStation(self.loader, "Assets/SpaceStation/SpaceStation1B/spaceStation.x", self.render, "spaceStation1", "Assets/Planets/Textures/Mercury.jpg", (0, 0, 0), 1) 
 
     def drawBaseballSeams(self, centralObject, droneName, step, numSeams, radius = 1):
         unitVec = defensePaths.BaseballSeams(step, numSeams, B = 0.4)
@@ -86,7 +86,7 @@ class MyApp(ShowBase):
     def setCamera(self):
         self.disable_mouse()
         self.camera.reparentTo(self.player.modelNode)
-        self.camera.setFluidPos(0, -90, 0)
+        self.camera.setFluidPos(0, 0, 0)              # self.camera.setFluidPos(0, -90, 0) gives 3rd person POV, collision is attached to camera, not ship
         self.camera.setHpr(0, 0, 0)
     
     def enableHUD(self):

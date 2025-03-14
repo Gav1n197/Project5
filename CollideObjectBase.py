@@ -12,7 +12,7 @@ class PlacedObject(PandaNode):
 
 class CollidableObject(PlacedObject): # Makes PlacedObject into the parent of the child class CollidableObject
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str):
-        super(CollidableObject, self).__init__(loader, modelPath, parentNode, nodeName) # Applies the 
+        super(CollidableObject, self).__init__(loader, modelPath, parentNode, nodeName) 
 
         self.collisionNode = self.modelNode.attachNewNode(CollisionNode(nodeName + '_cNode')) #_cNode signifies that it is a collidable object
 
@@ -21,7 +21,7 @@ class InverseSphereCollideObject(CollidableObject):
         super(InverseSphereCollideObject, self).__init__(loader, modelPath, parentNode, nodeName)
         self.collisionNode.node().addSolid(CollisionInvSphere(colPositionVec, colRadius))
         
-        self.collisionNode.show()
+        #self.collisionNode.show()
 
 class CapsuleCollidableObject(CollidableObject):
     # a and b represent the furthest points away on each side of the capsule
