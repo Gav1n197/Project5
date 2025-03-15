@@ -14,7 +14,7 @@ class Player(SphereCollidableObjectVec3):
         self.accept = accept
         self.loader = loader
         self.render = render
-        self.modelNode = loader.loadModel(modelPath)
+        #self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
         self.modelNode.setPos(posVec)
@@ -219,7 +219,7 @@ class Player(SphereCollidableObjectVec3):
 class Universe(InverseSphereCollideObject):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float):
         super(Universe, self).__init__(loader, modelPath, parentNode, nodeName, posVec, 9600) ##Uses __init__ function from InverseSphereCollideObject
-        self.modelNode = loader.loadModel(modelPath)
+        #self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
         self.modelNode.setPos(posVec)
@@ -233,7 +233,7 @@ class Universe(InverseSphereCollideObject):
 class SpaceStation(CapsuleCollidableObject):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float):
         super(SpaceStation, self).__init__(loader, modelPath, parentNode, nodeName, 1, -1, 5, 1, -1, -5, 7)     ##Defines ax, ay, az, etc. for capsule
-        self.modelNode = loader.loadModel(modelPath)
+        #self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
         self.modelNode.setPos(posVec)
@@ -248,7 +248,7 @@ class SpaceStation(CapsuleCollidableObject):
 class Planet(SphereCollidableObject):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, x: float, y: float, z: float, scaleVec: float):
         super(Planet, self).__init__(loader, modelPath, parentNode, nodeName, x, y, z, scaleVec)
-        self.modelNode = loader.loadModel(modelPath)
+        #self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
         self.modelNode.setX(x)
@@ -264,7 +264,7 @@ class Planet(SphereCollidableObject):
 class Drone(SphereCollidableObject):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float): # type: ignore
         super(Drone, self).__init__(loader, modelPath, parentNode, nodeName, posVec.getX(), posVec.getY(), posVec.getZ(), scaleVec)
-        self.modelNode = loader.loadModel(modelPath)
+        #self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
         self.modelNode.setPos(posVec)
