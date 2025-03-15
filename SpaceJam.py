@@ -90,7 +90,7 @@ class MyApp(ShowBase):
         self.camera.setHpr(0, 0, 0)
     
     def enableHUD(self):
-        self.Hud = OnscreenImage(image = "Assets/Hud/Reticle3b.png", pos = Vec3(0,0,0), scale = 0.1)
+        self.Hud = OnscreenImage(image = "Assets/Hud/crosshair3.png", pos = Vec3(0,0,0), scale = 0.4)
         self.Hud.setTransparency(TransparencyAttrib.MAlpha)
 
     def quit(self):

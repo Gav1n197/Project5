@@ -23,7 +23,7 @@ class Player(SphereCollidableObjectVec3):
         self.modelNode.setName(nodeName)
         self.modelNode.setHpr(Hpr)
 
-        self.reloadTime = 0.25
+        self.reloadTime = 1.00
         self.missileDistance = 4000       # Time until missile explodes
         self.missileBay = 1               # Only one missile at a time can be launched (originally)
 
@@ -82,6 +82,7 @@ class Player(SphereCollidableObjectVec3):
         self.accept('s-up', self.Down, [0])
 
         self.accept('f', self.fire)
+        self.accept('f-up', self.checkReload)
 
     def leftRoll(self, keyDown):
         if (keyDown):
@@ -179,7 +180,7 @@ class Player(SphereCollidableObjectVec3):
         if self.missileBay:
             travRate = self.missileDistance
             aim = self.render.getRelativeVector(self.modelNode, Vec3.forward())  # The dirction the spaceship is facing (changed from self.render)
-            aim.normalize()                                                         # Normalizing a vector makes it consistant all the time
+            aim.normalize()                                                         # Normalizing a vector makes it consistent all the time
             fireSolution = aim * travRate
             inFront = aim * 150                                                     # Stores where the missile starts its path in comparison to the spaceship
             travVec = fireSolution + self.modelNode.getPos()
@@ -188,16 +189,13 @@ class Player(SphereCollidableObjectVec3):
             posVec = self.modelNode.getPos() + inFront
 
             #Create our missile
-            currentmissile = Missile(self.loader, 'Assets/Phaser/phaser.egg', self.render, tag, posVec, 4.0)
+            currentmissile = Missile(self.loader, 'Assets/Phaser/phaser.egg', self.render, tag, posVec, 3.0)
 
             Missile.Intervals[tag] = currentmissile.modelNode.posInterval(2.0, travVec, startPos = posVec, fluid = 1)
             Missile.Intervals[tag].start()
             
         else: #Start reloading
-            if not self.taskMgr.hasTaskNamed('reload'):
-                print('Reloading')
-                self.taskMgr.doMethodLater(0, self.reload, 'reload')
-                return Task.cont
+            self.checkReload()
             
     def reload(self, task):
         if task.time > self.reloadTime:
@@ -205,11 +203,17 @@ class Player(SphereCollidableObjectVec3):
             print("reload complete")
             return Task.done
         elif task.time <= self.reloadTime:
-            print("Still reloading!")
+            #print("Still reloading!")
             return Task.cont
         if self.missileBay > 1: # if the missiles ever glitch out
             self.missileBay = 1
             return Task.done
+    
+    def checkReload(self):
+        if not self.taskMgr.hasTaskNamed('reload'):
+                print('Reloading')
+                self.taskMgr.doMethodLater(0, self.reload, 'reload')
+                return Task.cont
 
 
 class Universe(InverseSphereCollideObject):
@@ -288,6 +292,6 @@ class Missile(SphereCollidableObject):
         Missile.fireModels[nodeName] = self.modelNode
         Missile.cNodes[nodeName] = self.collisionNode
         Missile.collisionSolids[nodeName] = self.collisionNode.node().getSolid(0)
-        Missile.cNodes[nodeName].show()
+        #Missile.cNodes[nodeName].show()
         print("Fire Missile #" + str(Missile.missileCount))
         

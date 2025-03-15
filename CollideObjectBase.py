@@ -36,7 +36,7 @@ class SphereCollidableObject(CollidableObject):
         super(SphereCollidableObject, self).__init__(loader, modelPath, parentNode, nodeName)
         self.collisionNode.node().addSolid(CollisionSphere(x, y, z, r))
 
-        self.collisionNode.show()
+        #self.collisionNode.show()
 
 class SphereCollidableObjectVec3(CollidableObject): #Used specifically for the player and just uses a vector3 instead of individual xyz coords
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, colPositionVec: Vec3, r: float):
